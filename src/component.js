@@ -1,34 +1,47 @@
 export default async () => {
 
-	class Component extends HTMLElement {
+  class Component extends HTMLElement {
 
-		constructor() {
-			super();
-			this.attachShadow({mode: 'open'});
-			this.content = document.createElement('div');
-			this.content.className = "component-wrapper";
-			this.shadowRoot.appendChild(this.content);
-		}
+    constructor() {
+      super();
+      this.attachShadow({ mode: 'open' });
+    }
 
-		connectedCallback() { this.connected(); }
-		connected() {}
+    // Alias Example
+    connectedCallback() { this.connected(); }
+    connected() { }
 
-		static define(tag, constructor) {
-			customElements.define(tag, constructor);
-		}
+    /**
+     * Get Tag from import url
+     * @param {string} url 
+     */
+    static tag(url) {
+      const importUrl = new URL(url);
+      if (!importUrl.searchParams.get('tag')) {
+        return importUrl.pathname.match(/\/([a-z, \-]+)\.[a-z]{0,9}$/)[1];
+      }
+      return importUrl.searchParams.get('tag');
+    }
 
-		static tag(meta) {
-			return new URL(meta.url).searchParams.get('tag');
-		}
+    set css(style) {
+      let styleElement = document.createElement('style');
+      styleElement.innerHTML = style;
+      const currentStyleElement = this.shadowRoot.querySelector('style');
+      if (currentStyleElement) this.shadowRoot.replaceChild(styleElement, currentStyleElement);
+      else this.shadowRoot.prepend(styleElement);
+    }
 
-		setStyle(style) {
-			const styleElement = document.createElement('style');
-			styleElement.innerHTML = style;
-			this.content.appendChild(styleElement);
-		}
-	}
+    set htm(markup) {
+      let template = document.createElement('template');
+      template.innerHTML = markup;
+      const style = this.shadowRoot.querySelector('style') || document.createElement('style');
+      this.shadowRoot.innerHTML = '';
+      this.shadowRoot.appendChild(style);
+      this.shadowRoot.appendChild(template.content);
+    }
+  }
 
-	customElements.define('sunup-std-component', Component);
+  customElements.define('sunup-std-component', Component);
 
-	return Component;
+  return Component;
 };
