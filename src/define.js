@@ -20,6 +20,9 @@ const define = (component) => {
 			style.innerHTML = component.style;
 			this.root.appendChild(style);
 			this.root.innerHTML += component.template.call(null, component);
+			
+			// Linking component object and custom element
+			component.customElement = this;
 			component.root = this.root;
 
 			// Setup events
