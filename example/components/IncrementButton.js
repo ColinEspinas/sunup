@@ -15,9 +15,6 @@ const IncrementButton = {
 		color: 'red',
 	},
 	methods: {
-    increment() {
-			emit(this, 'update');
-		},
 		updateCounter(target) {
 			target.innerHTML = ++this.props.count;
 		}

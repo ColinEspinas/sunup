@@ -5,7 +5,7 @@
  * @param {string} event 
  * @param {string} [selector] 
  */
- const emit = (component, event, selector) => {
+const emit = (component, event, selector) => {
 	const targets = selector ? 
 		component.root.querySelectorAll(selector) : 
 		component.root.querySelectorAll(`*[\\@${event}]`);

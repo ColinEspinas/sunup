@@ -7,7 +7,7 @@
   * @param {Function} [component.extends]
   * @param {String} [component.style]
   * @param {Object} [component.props]
-  * @param {Object} [component.data]
+  * @param {Object} [component.state]
   * @param {Function[]} [component.methods]
 	* 
 	* @param {Object} [options]
@@ -26,6 +26,9 @@ const define = (component, options = {}) => {
 						component.props[attribute.name.substring(1)] = attribute.value;
 				});
 
+				// Set component state
+				component.state = component.state || {};
+
 				// Choosing a root depending on the use of a shadow DOM
 				this.root = component.noShadow ? this : this.attachShadow({ mode: 'open' });
 
@@ -41,7 +44,6 @@ const define = (component, options = {}) => {
 				component.customElement = this;
 				component.root = this.root;
 				this.component = component;
-				console.log(this.component);
 
 				// Setup events
 				Array.prototype.filter.call(this.root.querySelectorAll('*:not(style)'), element => {
