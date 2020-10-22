@@ -5,9 +5,9 @@ const App = {
 	selector: 'sunup-app',
 	template: ({state}) => /*html*/`
 		<h1 id="title">${state.title}</h1>
-		<increment-button @click='increment'></increment-button>
+		<increment-button @click='increment' :count=10></increment-button>
 	`,
-	style: /*css*/`
+	style: () => /*css*/`
 		h1 {
 			color: red;
 		}

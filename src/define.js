@@ -14,39 +14,56 @@
 	* @param {String} [options.extends]
   */
 const define = (component, options = {}) => {
-	const Extends = component.extends || HTMLElement;
+	if (!customElements.get(component.selector)) {
+		const Extends = component.extends || HTMLElement;
+		customElements.define(component.selector, class extends Extends {
+			constructor() {
+				super();
 
-	customElements.define(component.selector, class extends Extends {
-		constructor() {
-			super();
-			this.root = component.noShadow ? this : this.attachShadow({ mode: 'open' });
-			const style = document.createElement('style');
-			style.innerHTML = component.style;
-			this.root.appendChild(style);
-			this.root.innerHTML += component.template.call(null, component);
-			
-			// Linking component object and custom element
-			component.customElement = this;
-			component.root = this.root;
-			this.component = component;
+				// Add attributes to props
+				component.props = component.props || {};
+				Array.prototype.filter.call(this.attributes, attribute => attribute.name.indexOf(':') === 0).map(attribute => {
+						component.props[attribute.name.substring(1)] = attribute.value;
+				});
 
-			// Setup events
-			Array.prototype.filter.call(this.root.querySelectorAll('*:not(style)'), element => {
-				if (element.attributes) {
-					return Array.prototype.filter.call(
-						element.attributes, 
-						attribute => attribute.name.indexOf('@') === 0)
-					.map(attribute => {
-						console.log(component);
-						element.addEventListener(
-							attribute.name.substring(1), 
-							component.methods[attribute.value].bind(component, element)
-						);
-					});
-				}
-			});
-		}
-	}, options);
+				// Choosing a root depending on the use of a shadow DOM
+				this.root = component.noShadow ? this : this.attachShadow({ mode: 'open' });
+
+				// Add style to root
+				const style = document.createElement('style');
+				style.innerHTML = component.style(component);
+				this.root.appendChild(style);
+
+				// Add template to root
+				this.root.innerHTML += component.template.call(null, component);
+				
+				// Linking component object and custom element
+				component.customElement = this;
+				component.root = this.root;
+				this.component = component;
+				console.log(this.component);
+
+				// Setup events
+				Array.prototype.filter.call(this.root.querySelectorAll('*:not(style)'), element => {
+					if (element.attributes) {
+						return Array.prototype.map.call(
+							element.attributes, 
+							attribute => {
+								if (attribute.name.indexOf('@') === 0) {
+									element.addEventListener(
+										attribute.name.substring(1), 
+										component.methods[attribute.value].bind(component, element)
+									);
+								}
+							});
+					}
+				});
+			}
+		}, options);
+	}
+	else {
+		console.warn('There is more than one component using the ' + component.selector + ' selector.');
+	}
 };
 
 export default define;

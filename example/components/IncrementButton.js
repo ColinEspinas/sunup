@@ -5,13 +5,14 @@ const IncrementButton = {
 	template: ({props}) => /*html*/`
 		<button>Counting: <span @update="updateCounter">${props.count}</span></button>
 	`,
-	style: /*css*/`
-		h1 {
-			color: red;
+	style: ({props}) => /*css*/`
+		span { 
+			color: ${props.color}; 
 		}
 	`,
 	props: {
 		count: 0,
+		color: 'red',
 	},
 	methods: {
     increment() {
