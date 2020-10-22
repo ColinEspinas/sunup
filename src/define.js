@@ -1,5 +1,6 @@
 
  /**
+	* Defines a web component using customElement.define, converting a component object to a custom element.
   * @param {Object} component
   * @param {String} component.selector
   * @param {Function} component.template
@@ -8,8 +9,11 @@
   * @param {Object} [component.props]
   * @param {Object} [component.data]
   * @param {Function[]} [component.methods]
+	* 
+	* @param {Object} [options]
+	* @param {String} [options.extends]
   */
-const define = (component) => {
+const define = (component, options = {}) => {
 	const Extends = component.extends || HTMLElement;
 
 	customElements.define(component.selector, class extends Extends {
@@ -24,23 +28,25 @@ const define = (component) => {
 			// Linking component object and custom element
 			component.customElement = this;
 			component.root = this.root;
+			this.component = component;
 
 			// Setup events
-			console.log(Array.prototype.filter.call(this.root.querySelectorAll('*:not(style)'), element => {
+			Array.prototype.filter.call(this.root.querySelectorAll('*:not(style)'), element => {
 				if (element.attributes) {
 					return Array.prototype.filter.call(
-						element.attributes,
-						attribute => attribute.name.indexOf('@') === 0
-					).map(attribute => {
-						element.addEventListener(attribute.name.substring(1), component.methods[attribute.value].bind(component));
-						return attribute;
-					}).length;
+						element.attributes, 
+						attribute => attribute.name.indexOf('@') === 0)
+					.map(attribute => {
+						console.log(component);
+						element.addEventListener(
+							attribute.name.substring(1), 
+							component.methods[attribute.value].bind(component, element)
+						);
+					});
 				}
-			}).map(element => {
-				return element.attributes;
-			}));
+			});
 		}
-	});
+	}, options);
 };
 
 export default define;

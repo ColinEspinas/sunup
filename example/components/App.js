@@ -1,31 +1,23 @@
 import { define, emit } from '../../src/sunup.js';
+import IncrementButton from './IncrementButton.js';
 
 const App = {
 	selector: 'sunup-app',
-    extends: null,
-	template: ({props, data}) => /*html*/`
-		<h1 id="title" @update="updateTitle">${data.title}</h1>
-		<button @click="increment">Counting: ${props.count}</button>
+	template: ({state}) => /*html*/`
+		<h1 id="title">${state.title}</h1>
+		<increment-button @click='increment'></increment-button>
 	`,
 	style: /*css*/`
 		h1 {
 			color: red;
 		}
 	`,
-	props: {
-		count: 0,
-	},
-	data: {
+	state: {
 		title: "Hello, world!",
 	},
 	methods: {
-		increment(event) {
-			this.props.count++;
-			emit(this, '#title', 'update');
-		},
-		updateTitle(event) {
-			console.log(event);
-			this.root.querySelector("#title").innerHTML = this.props.count;
+		increment(target) {
+			emit(target.component, 'update');
 		}
 	}
 }
