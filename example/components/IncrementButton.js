@@ -10,8 +10,11 @@ const IncrementButton = {
 			color: ${props.color}; 
 		}
 	`,
+	props: {
+		count: { default: 0, state: 'count'},
+	},
 	state: {
-		count: 0,
+		count: null,
 	},
 	methods: {
 		increment() { ++this.state.count; },

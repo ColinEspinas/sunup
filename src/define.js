@@ -1,4 +1,4 @@
-import { useStore } from './sunup.js';
+import { useState, useProps } from './sunup.js';
 
  /**
 	* Defines a web component using customElement.define, converting a component object to a custom element.
@@ -17,6 +17,13 @@ const define = (component, options = {}) => {
 	if (!customElements.get(component.selector)) {
 		const Extends = component.extends || HTMLElement;
 		customElements.define(component.selector, class extends Extends {
+			static get observedAttributes() {
+				return (
+					Array.prototype.filter.call(this.attributes, attribute => attribute.name.indexOf(':') === 0).map(attribute => {
+						return attribute.name.substring(1);
+					})
+				);
+			}
 			static instancesCount;
 
 			constructor() {
@@ -29,11 +36,15 @@ const define = (component, options = {}) => {
 				// Add attributes to props
 				component.props = component.props || {};
 				Array.prototype.filter.call(this.attributes, attribute => attribute.name.indexOf(':') === 0).map(attribute => {
-						component.props[attribute.name.substring(1)] = attribute.value;
+					let property = component.props[attribute.name.substring(1)] || {};
+					property.value = attribute.value;
+					component.state[property.state] = attribute.value;
+					component.props[attribute.name.substring(1)] = property;
 				});
+				component.props = useProps({ props: component.props, component}) || {};
 
-				// Set component store
-				component.state = useStore({ state: component.state, component, persist: false}) || {};
+				// Set component state
+				component.state = useState({ state: component.state, component, persist: false}) || {};
 
 				// Choosing a root depending on the use of a shadow DOM
 				this.root = component.noShadow ? this : this.attachShadow({ mode: 'open' });
