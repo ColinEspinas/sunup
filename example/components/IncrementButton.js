@@ -2,21 +2,24 @@ import { define, emit } from '../../src/sunup.js';
 
 const IncrementButton = {
 	selector: 'increment-button',
-	template: ({props}) => /*html*/`
-		<button>Counting: <span @update="updateCounter">${props.count}</span></button>
+	template: ({ props, state }) => /*html*/`
+		<button @click="increment">Counting: <span @update="updateCounter">${state.count}</span></button>
 	`,
-	style: ({props}) => /*css*/`
+	style: ({ props }) => /*css*/`
 		span { 
 			color: ${props.color}; 
 		}
 	`,
-	props: {
+	state: {
 		count: 0,
-		color: 'red',
 	},
 	methods: {
-		updateCounter(target) {
-			target.innerHTML = ++this.props.count;
+		increment() { ++this.state.count; },
+		updateCounter(target) { target.innerHTML = this.state.count; }
+	},
+	watch: {
+		state: {
+			count() { emit(this, 'update'); }
 		}
 	}
 }

@@ -3,9 +3,9 @@ import IncrementButton from './IncrementButton.js';
 
 const App = {
 	selector: 'sunup-app',
-	template: ({state}) => /*html*/`
-		<h1 id="title">${state.title}</h1>
-		<increment-button @click='increment' :count=10></increment-button>
+	template: ({ state }) => /*html*/`
+		<h1 id="title" @click="setTitle">${state.title}</h1>
+		<increment-button :count=10 :color="red"></increment-button>
 	`,
 	style: () => /*css*/`
 		h1 {
@@ -16,8 +16,16 @@ const App = {
 		title: "Hello, world!",
 	},
 	methods: {
-		increment(target) {
-			emit(target.component, 'update');
+		setTitle() {
+			this.state.title = 'test';
+		}
+	},
+	watch: {
+		state: {
+			/** @this App */
+			title() { 
+				this.root.querySelector("#title").innerHTML = this.state.title;
+			}
 		}
 	}
 }
