@@ -16,7 +16,6 @@ const IncrementButton = {
 	state: {
 		count: null,
 	},
-	persist: 'increment-button',
 	methods: {
 		increment() { ++this.state.count; },
 		updateCounter(target) { target.innerHTML = this.state.count; }
