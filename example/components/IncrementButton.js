@@ -18,11 +18,14 @@ const IncrementButton = {
 	},
 	methods: {
 		increment() { ++this.state.count; },
-		updateCounter(target) { target.innerHTML = this.state.count; }
+		updateCounter(target) { 
+			target.innerHTML = this.state.count; 
+			emit('counterUpdated');
+		}
 	},
 	watch: {
 		state: {
-			count() { emit(this, 'update'); }
+			count() { emit('update'); }
 		}
 	}
 }

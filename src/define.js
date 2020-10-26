@@ -4,6 +4,7 @@ import { useState, useProps } from './sunup.js';
    * Defines a web component using customElement.define, converting a component object to a custom element.
    * @param {Object} component
    * @param {String} component.selector
+   * @param {Boolean} [component.noShadow]
    * @param {Function} component.template
    * @param {Function} [component.extends]
    * @param {String} [component.style]
@@ -49,7 +50,8 @@ const define = (component, options = {}) => {
 				component.state = useState({ state: component.state, component, persist: component.persist }) || {};
 
 				// Choosing a root depending on the use of a shadow DOM
-				this.root = component.noShadow ? this : this.attachShadow({ mode: 'open' });
+				component.noShadow = component.noShadow || false;
+				this.root = !component.noShadow ? this.attachShadow({ mode: 'open' }) : this;
 
 				// Add style to root
 				const style = document.createElement('style');
@@ -71,6 +73,7 @@ const define = (component, options = {}) => {
 							element.attributes,
 							attribute => {
 								if (attribute.name.indexOf('@') === 0) {
+									console.log(element, component, attribute.value, component.methods[attribute.value]);
 									element.addEventListener(
 										attribute.name.substring(1),
 										component.methods[attribute.value].bind(component, element)
