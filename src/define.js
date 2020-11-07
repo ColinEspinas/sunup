@@ -73,7 +73,6 @@ const define = (component, options = {}) => {
 							element.attributes,
 							attribute => {
 								if (attribute.name.indexOf('@') === 0) {
-									console.log(element, component, attribute.name, attribute.value, component.methods[attribute.value]);
 									element.addEventListener(
 										attribute.name.substring(1),
 										component.methods[attribute.value].bind(component, element)

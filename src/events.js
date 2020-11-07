@@ -22,7 +22,10 @@ const getAllTargets = (event, component, selector) => {
 		component.root.querySelectorAll(selector) :
 		component ?
 			component.root.querySelectorAll(`*[\\@${event}]`) :
-			getAllElements();
+			getAllElements().filter(element => 
+				Array.prototype.filter.call(element.attributes, attribute => 
+					attribute.name === `@${event}`).length > 0
+			);
 }
 
 /**
