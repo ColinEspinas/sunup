@@ -2,53 +2,49 @@
 /**
  * Emit an event to a target
  * @param {Object} component
- * @param {string} event 
+ * @param {String} event 
  * @param {Object} [data]
- * @param {string} [selector]
+ * @param {String} [selector]
  */
 const emit = (event, { component, detail, selector } = {}) => {
-	const targets = getAllTargets({ event, component, selector });
-	for (const target of targets) {
+	for (const target of getAllTargets(event, component, selector)) 
 		target.dispatchEvent(new CustomEvent(event, { detail }));
-	}
 }
 
-const getAllTargets = ({ event, component, selector }) => {
-	let targets = [];
-	targets = selector ?
+/**
+ * Get all targets of an event
+ * @param {String} event
+ * @param {Object} component
+ * @param {String} selector
+ */
+const getAllTargets = (event, component, selector) => {
+	return selector ?
 		component.root.querySelectorAll(selector) :
 		component ?
 			component.root.querySelectorAll(`*[\\@${event}]`) :
 			getAllElements();
-	return targets;
 }
 
+/**
+ * Get all elements children of a root element
+ * @param {HTMLElement} root
+ */
 const getAllElements = (root = document.body) => {
 	let elements = !root.shadowRoot ? root.children : root.shadowRoot.querySelectorAll('*');
-	elements = Array.prototype.filter.call(elements, (element) => element.tagName !== 'SCRIPT' && element.tagName !== 'STYLE');
-	let elementsToAdd = [];
-	for (const element of elements) {
-		const newElements = getAllElements(element);
-		for (const e of newElements) {
-			if (e.tagName !== 'SCRIPT' && e.tagName !== 'STYLE')
-				elementsToAdd.push(e);
-		}
+	if (elements.length > 0) {
+		let children = [];
+		return Array.prototype.filter.call(elements, (element) => {
+			return element.tagName !== 'SCRIPT' && element.tagName !== 'STYLE'
+		}).map(element => {
+			getAllElements(element).map(child => {
+				if (child.tagName !== 'SCRIPT' && child.tagName !== 'STYLE')
+					children.push(child);
+			});
+			return element;
+		}).concat(children);
 	}
-	return elements.concat(elementsToAdd);
+	return [];
 }
-
-// const flatArray = (array) => {
-// 	let flatArray = []
-// 	for (let index = 0; index < array.length; index++) {
-// 		const element = array[index];
-// 		if (Array.isArray(element)) {
-// 			flatArray = flatArray.concat(array.flatten.call(element))
-// 		} else {
-// 			flatArray.push(element)
-// 		}
-// 	}
-// 	return flatArray;
-// }
 
 export {
 	emit,
