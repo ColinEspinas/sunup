@@ -4,7 +4,7 @@ import IncrementButton from './IncrementButton.js';
 const App = {
 	selector: 'sunup-app',
 	template: ({ state }) => /*html*/`
-		<h1 id="title" @click="setTitle" @counterUpdated="changeColor">${state.title}</h1>
+		<h1 id="title" @click="setTitle" @counter-updated="changeColor">${state.title}</h1>
 		<increment-button :count=10 :color="red"></increment-button>
 	`,
 	style: () => /*css*/`
@@ -20,7 +20,6 @@ const App = {
 			this.state.title = 'test';
 		},
 		changeColor(target) {
-			console.log('test');
 			target.style.color = 'blue';
 		}
 	},

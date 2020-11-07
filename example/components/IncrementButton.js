@@ -20,7 +20,7 @@ const IncrementButton = {
 		increment() { ++this.state.count; },
 		updateCounter(target) { 
 			target.innerHTML = this.state.count; 
-			emit('counterUpdated');
+			emit('counter-updated');
 		}
 	},
 	watch: {

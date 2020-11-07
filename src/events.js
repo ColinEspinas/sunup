@@ -9,7 +9,7 @@
 const emit = (event, { component, detail, selector } = {}) => {
 	const targets = getAllTargets({ event, component, selector });
 	for (const target of targets) {
-		target.dispatchEvent(new CustomEvent(event, { detail, bubbles: true }));
+		target.dispatchEvent(new CustomEvent(event, { detail }));
 	}
 }
 
@@ -25,12 +25,12 @@ const getAllTargets = ({ event, component, selector }) => {
 
 const getAllElements = (root = document.body) => {
 	let elements = !root.shadowRoot ? root.children : root.shadowRoot.querySelectorAll('*');
-	elements = Array.prototype.filter.call(elements, (element) => element.tagName !== 'SCRIPT');
+	elements = Array.prototype.filter.call(elements, (element) => element.tagName !== 'SCRIPT' && element.tagName !== 'STYLE');
 	let elementsToAdd = [];
 	for (const element of elements) {
 		const newElements = getAllElements(element);
 		for (const e of newElements) {
-			if (e.tagName !== 'script')
+			if (e.tagName !== 'SCRIPT' && e.tagName !== 'STYLE')
 				elementsToAdd.push(e);
 		}
 	}
