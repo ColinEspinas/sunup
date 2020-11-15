@@ -17,7 +17,7 @@ const App = {
 	},
 	methods: {
 		setTitle() {
-			this.state.title = 'test';
+			this.state.title = 'Hello, Mills!';
 		},
 		changeColor(target) {
 			target.style.color = 'blue';

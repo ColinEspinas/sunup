@@ -16,3 +16,5 @@ export {
 	// Utils:
 	JSONToCSS
 };
+
+export default {};
