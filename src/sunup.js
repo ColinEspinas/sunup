@@ -17,4 +17,4 @@ export {
 	JSONToCSS
 };
 
-export default {};
+export default undefined;
