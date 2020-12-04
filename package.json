@@ -1,0 +1,22 @@
+{
+  "name": "sunup",
+  "version": "0.1.0",
+  "description": "A zero dependency, web component based front-end framework written in plain ES modules",
+  "main": "./src/sunup.js",
+  "exports": {
+    "import": "./src/sunup.js"
+  },
+  "files": [
+    "./src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ColinEspinas/sunup.git"
+  },
+  "author": "Colin Espinas",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ColinEspinas/sunup/issues"
+  },
+  "homepage": "https://github.com/ColinEspinas/sunup#readme"
+}
