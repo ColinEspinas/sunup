@@ -4,7 +4,7 @@ const useProps = ({props, component} = {}) => {
 	props = props || {};
 	return new Proxy(props, {
 		set(props, key, modifier) {
-			if (modifier.from && modifier.from === 'attributeChangedCallback') {
+			if (modifier.force) {
 				props[key].value = modifier.value;
 				if (component && component.watch && component.watch.props && component.watch.props[key])
 					component.watch.props[key].call(component);
