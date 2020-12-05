@@ -11,7 +11,7 @@ const IncrementButton = {
 		}
 	`,
 	props: {
-		count: { default: 0, state: 'count'},
+		count: { default: 0 },
 	},
 	state: {
 		count: null,

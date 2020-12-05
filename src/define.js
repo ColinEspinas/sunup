@@ -21,9 +21,9 @@ const define = (component, options = {}) => {
 		customElements.define(component.selector, class extends Extends {
 			static get observedAttributes() {
 				return (
-					Array.prototype.filter.call(this.attributes, attribute => attribute.name.indexOf(':') === 0).map(attribute => {
-						return attribute.name.substring(1);
-					})
+					component.props ? Object.keys(component.props).map(prop => {
+						return ':' + prop;
+					}) : []
 				);
 			}
 			static instancesCount;
@@ -40,7 +40,6 @@ const define = (component, options = {}) => {
 				Array.prototype.filter.call(this.attributes, attribute => attribute.name.indexOf(':') === 0).map(attribute => {
 					let property = component.props[attribute.name.substring(1)] || {};
 					property.value = attribute.value;
-					if (property.state) component.state[property.state] = attribute.value;
 					component.props[attribute.name.substring(1)] = property;
 				});
 				component.props = useProps({ props: component.props, component }) || {};
@@ -89,6 +88,10 @@ const define = (component, options = {}) => {
 
 			disconnectedCallback() {
 				if (component.disconnected) component.disconnected(component);
+			}
+
+			attributeChangedCallback(prop, old, current) {
+				if (old !== current) this.component.props[prop.substring(1)] = current;
 			}
 		}, options);
 	}

@@ -9,6 +9,10 @@ const useState = ({state, persist, component} = {}) => {
 				localStorage.setItem(persist + '-state', JSON.stringify(state));
 			if (component && component.watch && component.watch.state && component.watch.state[key])
 				component.watch.state[key].call(component);
+			for (const prop of Object.keys(component.props)) {
+				if (prop === key)
+					component.customElement.setAttribute(':' + prop, value);
+			}
 			return true;
 		},
 		get(state, key) {

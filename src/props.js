@@ -3,8 +3,21 @@
 const useProps = ({props, component} = {}) => {
 	props = props || {};
 	return new Proxy(props, {
-		set() {
-			console.error('You cannot set a property manually, store your data in the component state or pass them through a parent component');
+		set(props, key, value) {
+			if (value) {
+				props[key].value = value;
+				if (component && component.watch && component.watch.props && component.watch.props[key])
+					component.watch.props[key].call(component);
+				if (props[key].state) {
+					component.state[props[key].state] = props[key].value;
+				}
+				for (const stateName of Object.keys(component.state)) {
+					if (stateName === key)
+						component.state[stateName] = props[key].value;
+				}
+			}
+			else
+				console.error('You cannot set a property manually, store your data in the component state or pass them through a parent component');
 			return true;
 		},
 		get(props, key) {
