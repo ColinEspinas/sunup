@@ -2,14 +2,18 @@ import { define, emit } from '../../src/sunup.js';
 
 export default define({
 	selector: 'increment-button',
+	extends: HTMLButtonElement,
+	noShadow: true,
 	template: ({ props }) => /*html*/`
-		<button @click="increment">Counting: ${props.count}</button>
+		<root @click="increment">
+			<span>Counting: ${props.count}</span>
+		</root>
 	`,
-	style: ({ props }) => /*css*/`
-		span { 
-			color: ${props.color}; 
-		}
-	`,
+	// style: ({ props }) => /*css*/`
+	// 	span { 
+	// 		color: ${props.color}; 
+	// 	}
+	// `,
 	props: {
 		count: { default: 0 },
 		color: { default: 'green' },
@@ -18,7 +22,7 @@ export default define({
 		count: null,
 	},
 	methods: {
-		increment({ state }, target) { target.innerHTML = `Counting: ${++state.count}`; },
+		increment({ state }, target) { target.textContent = `Counting: ${++state.count}`; },
 	},
 	watch: {
 		state: {
@@ -28,4 +32,4 @@ export default define({
 			color({ props }) { console.log('color is now ' + props.color) }
 		}
 	}
-});
+}, {extends: 'button'});

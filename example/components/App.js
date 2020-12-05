@@ -5,7 +5,7 @@ export default define({
 	selector: 'sunup-app',
 	template: ({ state }) => /*html*/`
 		<h1 id="title" @click="setTitle">${state.title}</h1>
-		<increment-button :count=10 :color="red"></increment-button>
+		<button is="increment-button" :count=10 :color="red"></button>
 	`,
 	style: () => /*css*/`
 		h1 {
@@ -21,7 +21,7 @@ export default define({
 	watch: {
 		state: {
 			title({root, state}) { 
-				root.querySelector("#title").innerHTML = state.title;
+				root.querySelector("#title").textContent = state.title;
 			}
 		}
 	}

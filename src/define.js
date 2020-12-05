@@ -75,36 +75,46 @@ const define = (component, options = {}) => {
 
 				// Choosing a root depending on the use of a shadow DOM
 				component.noShadow = component.noShadow || false;
+				/** @type {HTMLElement | ShadowRoot} */
 				this.root = !component.noShadow ? this.attachShadow({ mode: 'open' }) : this;
 
 				// Add style to root
 				const style = document.createElement('style');
-				style.innerHTML = component.style(component);
+				style.innerHTML = component.style ? component.style(component) : '';
 				this.root.appendChild(style);
 
 				// Add template to root
 				this.root.innerHTML += component.template(component);
 
-				// Linking component object and custom element
-				component.customElement = this;
-				component.root = this.root;
-				this.component = component;
-
-				// Setup events
+				// Bind events
+				const bindEvent = (attribute, element) => {
+					if (attribute.name.indexOf('@') === 0 && component.methods[attribute.value]) {
+						element.addEventListener(
+							attribute.name.substring(1),
+							component.methods[attribute.value].bind(null, component, element)
+						);
+						// Remove useless event attribute to prevent DOM pollution
+						element.removeAttribute(attribute.name);
+					}
+				};
+				if (this.root.children[1].tagName === 'ROOT') {
+					for (const attribute of this.root.children[1].attributes) {
+						bindEvent(attribute, this);
+					}
+					this.root.innerHTML = this.root.children[1].innerHTML;
+				};
 				Array.prototype.filter.call(this.root.querySelectorAll('*:not(style)'), element => {
 					if (element.attributes) {
 						Array.prototype.map.call(
 							element.attributes,
-							attribute => {
-								if (attribute.name.indexOf('@') === 0) {
-									element.addEventListener(
-										attribute.name.substring(1),
-										component.methods[attribute.value].bind(null, component, element)
-									);
-								}
-							});
+							attribute => bindEvent(attribute, element));
 					}
 				});
+
+				// Linking component object and custom element
+				component.customElement = this;
+				component.root = this.root;
+				this.component = component;
 			}
 
 			connectedCallback() {
