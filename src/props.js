@@ -3,9 +3,9 @@
 const useProps = ({props, component} = {}) => {
 	props = props || {};
 	return new Proxy(props, {
-		set(props, key, value) {
-			if (value) {
-				props[key].value = value;
+		set(props, key, modifier) {
+			if (modifier.from && modifier.from === 'attributeChangedCallback') {
+				props[key].value = modifier.value;
 				if (component && component.watch && component.watch.props && component.watch.props[key])
 					component.watch.props[key].call(component);
 				if (props[key].state) {
@@ -17,7 +17,7 @@ const useProps = ({props, component} = {}) => {
 				}
 			}
 			else
-				console.error('You cannot set a property manually, store your data in the component state or pass them through a parent component');
+				console.error('You cannot set a property manually, store your data in the component state or pass them through a parent component (dom attribute)');
 			return true;
 		},
 		get(props, key) {

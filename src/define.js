@@ -91,7 +91,12 @@ const define = (component, options = {}) => {
 			}
 
 			attributeChangedCallback(prop, old, current) {
-				if (old !== current) this.component.props[prop.substring(1)] = current;
+				if (old !== current) {
+					this.component.props[prop.substring(1)] = {
+						from: 'attributeChangedCallback',
+						value: current,
+					};
+				}
 			}
 		}, options);
 	}
