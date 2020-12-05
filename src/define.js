@@ -82,6 +82,14 @@ const define = (component, options = {}) => {
 					}
 				});
 			}
+
+			connectedCallback() {
+				if (component.connected) component.connected(component);
+			}
+
+			disconnectedCallback() {
+				if (component.disconnected) component.disconnected(component);
+			}
 		}, options);
 	}
 	else {
