@@ -1,6 +1,6 @@
 import { define, emit } from '../../src/sunup.js';
 
-const IncrementButton = {
+export default define({
 	selector: 'increment-button',
 	template: ({ props }) => /*html*/`
 		<button @click="increment">Counting: ${props.count}</button>
@@ -18,16 +18,14 @@ const IncrementButton = {
 		count: null,
 	},
 	methods: {
-		increment(target) { target.innerHTML = `Counting: ${++this.state.count}`; },
+		increment({ state }, target) { target.innerHTML = `Counting: ${++state.count}`; },
 	},
 	watch: {
 		state: {
 			count() { emit('update'); }
 		},
 		props: {
-			color() { console.log('color is now ' + this.props.color) }
+			color({ props }) { console.log('color is now ' + props.color) }
 		}
 	}
-}
-
-export default define(IncrementButton);
+});

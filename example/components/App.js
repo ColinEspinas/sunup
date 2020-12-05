@@ -1,7 +1,7 @@
 import { define, emit } from '../../src/sunup.js';
 import IncrementButton from './IncrementButton.js';
 
-const App = {
+export default define({
 	selector: 'sunup-app',
 	template: ({ state }) => /*html*/`
 		<h1 id="title" @click="setTitle">${state.title}</h1>
@@ -16,16 +16,13 @@ const App = {
 		title: "Hello, world!",
 	},
 	methods: {
-		setTitle() { this.state.title = 'Hello, Mills!';	},
+		setTitle({ state }) { state.title = 'Hello, Mills!';	},
 	},
 	watch: {
 		state: {
-			/** @this App */
-			title() { 
-				this.root.querySelector("#title").innerHTML = this.state.title;
+			title({root, state}) { 
+				root.querySelector("#title").innerHTML = state.title;
 			}
 		}
 	}
-}
-
-export default define(App);
+});

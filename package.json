@@ -9,6 +9,10 @@
   "files": [
     "./src"
   ],
+  "types": "types/sunup.d.ts",
+  "scripts": {
+    "types": "tsc"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ColinEspinas/sunup.git"
@@ -18,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/ColinEspinas/sunup/issues"
   },
-  "homepage": "https://github.com/ColinEspinas/sunup#readme"
+  "homepage": "https://github.com/ColinEspinas/sunup#readme",
+  "devDependencies": {
+    "typescript": "^4.1.2"
+  }
 }

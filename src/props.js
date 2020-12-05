@@ -7,7 +7,7 @@ const useProps = ({props, component} = {}) => {
 			if (modifier.force) {
 				props[key].value = modifier.value;
 				if (component && component.watch && component.watch.props && component.watch.props[key])
-					component.watch.props[key].call(component);
+					component.watch.props[key].call(null, component);
 				if (props[key].state) {
 					component.state[props[key].state] = props[key].value;
 				}
