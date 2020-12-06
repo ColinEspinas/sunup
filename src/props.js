@@ -2,6 +2,14 @@
 
 const useProps = ({props, component} = {}) => {
 	props = props || {};
+
+	// Setting defaults
+	for (const property of Object.values(props)) {
+		if (property.value === undefined && property.default) {
+			property.value = property.default;
+		}
+	}
+	
 	return new Proxy(props, {
 		set(props, key, modifier) {
 			if (modifier.force) {
@@ -21,7 +29,7 @@ const useProps = ({props, component} = {}) => {
 			return true;
 		},
 		get(props, key) {
-			return props[key].value;
+			return props[key] ? props[key].value : undefined;
 		},
 	});
 }

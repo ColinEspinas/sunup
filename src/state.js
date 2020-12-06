@@ -2,6 +2,18 @@
 
 const useState = ({state, persist, component} = {}) => {
 	state = state || {};
+
+	// Setting defaults from storage if persisted, if not from props
+	if (persist && JSON.parse(localStorage.getItem(persist + '-state'))) {
+		state = JSON.parse(localStorage.getItem(persist + '-state')) || state;
+		for (const [name, data] of Object.entries(state))
+			if (component.props[name]) component.props[name] = { force: true, value: data };
+	}
+	else {
+		for (let [name, data] of Object.entries(state))
+			state[name] = component.props[name] ? component.props[name] : data;
+	}
+	
 	return new Proxy(state, {
 		set(state, key, value) {
 			state[key] = value;

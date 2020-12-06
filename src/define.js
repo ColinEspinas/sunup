@@ -99,15 +99,20 @@ const define = (component, options = {}) => {
 				};
 				if (this.root.children[1].tagName === 'ROOT') {
 					for (const attribute of this.root.children[1].attributes) {
-						bindEvent(attribute, this);
+						if (attribute.name.indexOf('@') === 0 )
+							bindEvent(attribute, this);
+						else {
+							this.setAttribute(attribute.name, attribute.value);
+						}
 					}
 					this.root.innerHTML = this.root.children[1].innerHTML;
 				};
-				Array.prototype.filter.call(this.root.querySelectorAll('*:not(style)'), element => {
+				Array.prototype.map.call(this.root.querySelectorAll('*:not(style)'), element => {
 					if (element.attributes) {
 						Array.prototype.map.call(
 							element.attributes,
-							attribute => bindEvent(attribute, element));
+							attribute => bindEvent(attribute, element)
+						);
 					}
 				});
 

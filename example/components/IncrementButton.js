@@ -5,17 +5,17 @@ export default define({
 	extends: HTMLButtonElement,
 	noShadow: true,
 	template: ({ props }) => /*html*/`
-		<root @click="increment">
+		<root class="button" @click="increment">
 			<span>Counting: ${props.count}</span>
 		</root>
 	`,
-	// style: ({ props }) => /*css*/`
-	// 	span { 
-	// 		color: ${props.color}; 
-	// 	}
-	// `,
+	style: ({ props }) => /*css*/`
+		span { 
+			color: ${props.color}; 
+		}
+	`,
 	props: {
-		count: { default: 0 },
+		count: { default: 10 },
 		color: { default: 'green' },
 	},
 	state: {
@@ -31,5 +31,6 @@ export default define({
 		props: {
 			color({ props }) { console.log('color is now ' + props.color) }
 		}
-	}
+	},
+	persist: "increment"
 }, {extends: 'button'});
