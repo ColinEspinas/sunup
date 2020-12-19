@@ -6,13 +6,10 @@ export default define({
 	noShadow: true,
 	template: ({ props }) => /*html*/`
 		<root class="button" @click="increment">
-			<span>Counting: ${props.count}</span>
+			<span id="counter-text" @color="changeColor">Counting: ${props.count}</span>
 		</root>
 	`,
 	style: ({ props }) => /*css*/`
-		span { 
-			color: ${props.color}; 
-		}
 	`,
 	props: {
 		count: { default: 10 },
@@ -22,15 +19,19 @@ export default define({
 		count: null,
 	},
 	methods: {
-		increment({ state }, target) { target.textContent = `Counting: ${++state.count}`; },
+		increment({ state }, target) { target.querySelector('#counter-text').textContent = `Counting: ${++state.count}`; },
+		changeColor({ props }, target) { target.style.color = props.color; }
 	},
 	watch: {
 		state: {
 			count() { emit('update'); }
 		},
 		props: {
-			color({ props }) { console.log('color is now ' + props.color) }
+			color(component) { emit('color', { component }); }
 		}
+	},
+	connected: (component) => {
+		// console.log(component.props);
 	},
 	persist: "increment"
 }, {extends: 'button'});
