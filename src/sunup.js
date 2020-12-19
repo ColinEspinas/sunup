@@ -11,6 +11,7 @@
  *   This is the global export file for the sunup framework.
  */
 
+import createApp from './app.js';
 import define from './define.js';
 import useState from './state.js';
 import useProps from './props.js';
@@ -19,6 +20,7 @@ import { JSONToCSS } from './utils.js';
 
 export {
 	// General:
+	createApp,
 	define,
 	useState,
 	useProps,
@@ -30,5 +32,4 @@ export {
 	JSONToCSS
 };
 
-// Default not used as of today but exported to handle possible importing errors
-export default undefined;
+export default createApp;

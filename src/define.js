@@ -139,10 +139,9 @@ const define = (component, options = {}) => {
 				}
 			}
 		}, options);
+		return `<${component.selector}></${component.selector}>`;
 	}
-	else {
-		console.warn('There is more than one component using the ' + component.selector + ' selector.');
-	}
+	throw new Error('There is more than one component using the ' + component.selector + ' selector.');
 };
 
 export default define;

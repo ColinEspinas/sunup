@@ -21,7 +21,7 @@ export default define({
 	},
 	watch: {
 		state: {
-			title({root, state}) { 
+			title({ root, state }) { 
 				root.querySelector("#title").textContent = state.title;
 			},
 		}

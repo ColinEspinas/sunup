@@ -1,19 +1,23 @@
 
 
-const useState = ({state, persist, component} = {}) => {
+const useState = ({ state, persist, component } = {}) => {
 	state = state || {};
 
 	// Setting defaults from storage if persisted, if not from props
 	if (persist && JSON.parse(localStorage.getItem(persist + '-state'))) {
 		state = JSON.parse(localStorage.getItem(persist + '-state')) || state;
-		for (const [name, data] of Object.entries(state))
-			if (component.props[name]) component.props[name] = { force: true, value: data };
+		if (component) {
+			for (const [name, data] of Object.entries(state))
+				if (component.props[name]) component.props[name] = { force: true, value: data };
+		}
 	}
 	else {
-		for (let [name, data] of Object.entries(state))
-			state[name] = component.props[name] ? component.props[name] : data;
+		if (component) {
+			for (let [name, data] of Object.entries(state))
+				state[name] = component.props[name] ? component.props[name] : data;
+		}
 	}
-	
+
 	return new Proxy(state, {
 		set(state, key, value) {
 			state[key] = value;
@@ -21,9 +25,11 @@ const useState = ({state, persist, component} = {}) => {
 				localStorage.setItem(persist + '-state', JSON.stringify(state));
 			if (component && component.watch && component.watch.state && component.watch.state[key])
 				component.watch.state[key].call(null, component);
-			for (const prop of Object.keys(component.props)) {
-				if (prop === key)
-					component.customElement.setAttribute(':' + prop, value);
+			if (component) {
+				for (const prop of Object.keys(component.props)) {
+					if (prop === key)
+						component.customElement.setAttribute(':' + prop, value);
+				}
 			}
 			return true;
 		},
