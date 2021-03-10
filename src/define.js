@@ -66,7 +66,8 @@ const define = (component, options = {}) => {
 				this.component.props = this.component.props || {};
 				Array.prototype.filter.call(this.attributes, attribute => attribute.name.indexOf(':') === 0).map(attribute => {
 					let property = this.component.props[attribute.name.substring(1)] || {};
-					property.value = attribute.value;
+					try { property.value = JSON.parse(attribute.value); }
+					catch { property.value = attribute.value; }
 					this.component.props[attribute.name.substring(1)] = property;
 				});
 				this.component.props = useProps({ props: this.component.props, component: this.component }) || {};
