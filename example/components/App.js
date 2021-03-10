@@ -7,7 +7,7 @@ export default define({
 		<root class="test">
 			<h1 id="title" @click="setTitle">${state.title}</h1>
 			<button is="increment-button" id="1" :color="blue"></button>
-			<button is="increment-button" id="2" :color="red"></button>
+			<button is="increment-button" id="button-2" :color="red" :test='["hello", "hey"]'></button>
 		</root>
 	`,
 	style: () => /*css*/`
@@ -20,7 +20,9 @@ export default define({
 		name: "You",
 	},
 	methods: {
-		setTitle({ state }) { state.title = `Hello, ${ state.name }!`; },
+		setTitle({ state, root }) { 
+			state.title = `Hello, ${ state.name }!`;
+		},
 	},
 	watch: {
 		state: {

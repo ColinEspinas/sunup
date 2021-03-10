@@ -13,7 +13,12 @@ const useProps = ({props, component} = {}) => {
 	return new Proxy(props, {
 		set(props, key, modifier) {
 			if (modifier.force) {
-				props[key].value = modifier.value;
+				try {
+					props[key].value = JSON.parse(modifier.value);
+				}
+				catch {
+					props[key].value = modifier.value;
+				}
 				if (component && component.watch && component.watch.props && component.watch.props[key])
 					component.watch.props[key].call(null, component);
 				if (props[key].state) {
