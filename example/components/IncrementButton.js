@@ -34,7 +34,7 @@ export default define({
 		}
 	},
 	connected: (component) => {
-		// console.log(component.props);
+		console.log(component.props);
 	},
 	persist: "increment"
 }, {extends: 'button'});
