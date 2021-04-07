@@ -1,4 +1,5 @@
 import { define, emit } from '../../src/sunup.js';
+import style from '../style.css.js';
 
 export default define({
 	selector: 'increment-button',
@@ -9,8 +10,7 @@ export default define({
 			<span id="counter-text" @color="changeColor">Counting: ${props.count}</span>
 		</root>
 	`,
-	style: ({ props }) => /*css*/`
-	`,
+	style,
 	props: {
 		count: { default: 10 },
 		color: { default: 'green' },

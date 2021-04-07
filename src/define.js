@@ -81,10 +81,19 @@ const define = (component, options = {}) => {
 				/** @type {HTMLElement | ShadowRoot} */
 				this.root = !this.component.noShadow ? this.attachShadow({ mode: 'open' }) : this;
 
-				// Create style element
-				const stylesheet = new CSSStyleSheet();
-				if (this.component.style) stylesheet.replaceSync(this.component.style(this.component));
-				this.root.adoptedStyleSheets = [stylesheet];
+				// Create stylesheet or style element
+				let style = null;
+				if (this.component.style) {
+					const stylesheet = new CSSStyleSheet();
+					if (stylesheet.replaceSync && this.root.adoptedStyleSheets) { 
+						stylesheet.replaceSync(this.component.style(this.component));
+						this.root.adoptedStyleSheets = [stylesheet];
+					}
+					else {
+						style = document.createElement('style');
+						style.innerHTML = this.component.style ? this.component.style(this.component) : '';
+					}
+				}
 
 				// Add template to root
 				const parser = new DOMParser();
@@ -114,10 +123,10 @@ const define = (component, options = {}) => {
 						}
 					}
 					// Add style + "root" tag content to this.component root
-					this.root.innerHTML = parsedTemplate.body.children[0].innerHTML;
+					this.root.innerHTML = (style ? style.outerHTML : '') + parsedTemplate.body.children[0].innerHTML;
 				}
 				else {
-					this.root.innerHTML = parsedTemplate.body.innerHTML;
+					this.root.innerHTML = (style ? style.outerHTML : '') + parsedTemplate.body.innerHTML;
 				}
 
 				Array.prototype.map.call(this.root.querySelectorAll('*:not(style)'), element => {
