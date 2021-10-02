@@ -5,7 +5,7 @@ const useProps = ({props, component} = {}) => {
 
 	// Setting defaults
 	for (const property of Object.values(props)) {
-		if (property.value === undefined && property.default !== undefined) {
+		if (!property.value && property.default) {
 			property.value = property.default;
 		}
 	}

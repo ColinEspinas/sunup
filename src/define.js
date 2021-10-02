@@ -1,4 +1,4 @@
-import { useState, useProps } from './sunup.js';
+import { useState, useProps, objectDeepCopy } from './sunup.js';
 
 /**
  * @typedef {object} Property
@@ -56,8 +56,8 @@ const define = (component, options = {}) => {
 			constructor() {
 				super();
 				this.constructor.instancesCount = (this.constructor.instancesCount || 0) + 1;
-
-				this.component = {...component};
+				console.log(this.constructor.instancesCount);
+				this.component = objectDeepCopy(component);
 
 				// Add this.component key
 				this.key = this.component.selector + '-' + this.constructor.instancesCount;
@@ -86,6 +86,7 @@ const define = (component, options = {}) => {
 				if (this.component.style) {
 					const stylesheet = new CSSStyleSheet();
 					if (stylesheet.replaceSync && this.root.adoptedStyleSheets) { 
+						console.log("test");
 						stylesheet.replaceSync(this.component.style(this.component));
 						this.root.adoptedStyleSheets = [stylesheet];
 					}

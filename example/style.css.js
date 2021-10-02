@@ -1,9 +1,8 @@
-export default () => /*css*/`
+export default ({props}) => /*css*/`
   .button {
     background-color: #eeeeee;
     border: none;
     border-radius: 5px;
-    color: blue !important;
     padding: 10px;
     cursor: pointer;
   }

@@ -16,7 +16,7 @@ import define from './define.js';
 import useState from './state.js';
 import useProps from './props.js';
 import { emit } from './events.js';
-import { JSONToCSS } from './utils.js';
+import { JSONToCSS, objectDeepCopy } from './utils.js';
 
 export {
 	// General:
@@ -29,7 +29,8 @@ export {
 	emit,
 
 	// Utils:
-	JSONToCSS
+	JSONToCSS,
+	objectDeepCopy,
 };
 
 export default createApp;
