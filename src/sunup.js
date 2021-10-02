@@ -19,18 +19,18 @@ import { emit } from './events.js';
 import { JSONToCSS, objectDeepCopy } from './utils.js';
 
 export {
-	// General:
-	createApp,
-	define,
-	useState,
-	useProps,
+  // General:
+  createApp,
+  define,
+  useState,
+  useProps,
 
-	// Events:
-	emit,
+  // Events:
+  emit,
 
-	// Utils:
-	JSONToCSS,
-	objectDeepCopy,
+  // Utils:
+  JSONToCSS,
+  objectDeepCopy,
 };
 
 export default createApp;

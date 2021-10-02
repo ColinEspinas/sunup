@@ -41,127 +41,127 @@ import { useState, useProps, objectDeepCopy } from './sunup.js';
    * @param {DefineOptions} [options]
  */
 const define = (component, options = {}) => {
-	if (!customElements.get(component.selector)) {
-		const Extends = component.extends || HTMLElement;
-		customElements.define(component.selector, class extends Extends {
-			static get observedAttributes() {
-				return (
-					component.props ? Object.keys(component.props).map(prop => {
-						return ':' + prop;
-					}) : []
-				);
-			}
-			static instancesCount;
+  if (!customElements.get(component.selector)) {
+    const Extends = component.extends || HTMLElement;
+    customElements.define(component.selector, class extends Extends {
+      static get observedAttributes() {
+        return (
+          component.props ? Object.keys(component.props).map(prop => {
+            return ':' + prop;
+          }) : []
+        );
+      }
+      static instancesCount;
 
-			constructor() {
-				super();
-				this.constructor.instancesCount = (this.constructor.instancesCount || 0) + 1;
+      constructor() {
+        super();
+        this.constructor.instancesCount = (this.constructor.instancesCount || 0) + 1;
 
-				this.component = objectDeepCopy(component);
+        this.component = objectDeepCopy(component);
 
-				// Add this.component key
-				this.key = this.component.selector + '-' + this.constructor.instancesCount;
+        // Add this.component key
+        this.key = this.component.selector + '-' + this.constructor.instancesCount;
 
-				// Add attributes to props
-				this.component.props = this.component.props || {};
-				Array.prototype.filter.call(this.attributes, attribute => attribute.name.indexOf(':') === 0).map(attribute => {
-					let property = this.component.props[attribute.name.substring(1)] || {};
-					try { property.value = JSON.parse(attribute.value); }
-					catch { property.value = attribute.value; }
-					this.component.props[attribute.name.substring(1)] = property;
-				});
-				this.component.props = useProps({ props: this.component.props, component: this.component }) || {};
+        // Add attributes to props
+        this.component.props = this.component.props || {};
+        Array.prototype.filter.call(this.attributes, attribute => attribute.name.indexOf(':') === 0).map(attribute => {
+          let property = this.component.props[attribute.name.substring(1)] || {};
+          try { property.value = JSON.parse(attribute.value); }
+          catch { property.value = attribute.value; }
+          this.component.props[attribute.name.substring(1)] = property;
+        });
+        this.component.props = useProps({ props: this.component.props, component: this.component }) || {};
 
-				// Set this.component state
-				this.component.persist = (this.component.persist && typeof this.component.persist === 'string') ? this.component.persist : false;
-				this.component.state = useState({ state: this.component.state, component: this.component, persist: this.component.persist }) || {};
+        // Set this.component state
+        this.component.persist = (this.component.persist && typeof this.component.persist === 'string') ? this.component.persist : false;
+        this.component.state = useState({ state: this.component.state, component: this.component, persist: this.component.persist }) || {};
 
-				// Choosing a root depending on the use of a shadow DOM
-				this.component.noShadow = this.component.noShadow || false;
-				/** @type {HTMLElement | ShadowRoot} */
-				this.root = !this.component.noShadow ? this.attachShadow({ mode: 'open' }) : this;
+        // Choosing a root depending on the use of a shadow DOM
+        this.component.noShadow = this.component.noShadow || false;
+        /** @type {HTMLElement | ShadowRoot} */
+        this.root = !this.component.noShadow ? this.attachShadow({ mode: 'open' }) : this;
 
-				// Create stylesheet or style element
-				let style = null;
-				if (this.component.style) {
-					const stylesheet = new CSSStyleSheet();
-					if (stylesheet.replaceSync && this.root.adoptedStyleSheets) {
-						stylesheet.replaceSync(this.component.style(this.component));
-						this.root.adoptedStyleSheets = [stylesheet];
-					}
-					else {
-						style = document.createElement('style');
-						style.innerHTML = this.component.style ? this.component.style(this.component) : '';
-					}
-				}
+        // Create stylesheet or style element
+        let style = null;
+        if (this.component.style) {
+          const stylesheet = new CSSStyleSheet();
+          if (stylesheet.replaceSync && this.root.adoptedStyleSheets) {
+            stylesheet.replaceSync(this.component.style(this.component));
+            this.root.adoptedStyleSheets = [stylesheet];
+          }
+          else {
+            style = document.createElement('style');
+            style.innerHTML = this.component.style ? this.component.style(this.component) : '';
+          }
+        }
 
-				// Add template to root
-				const parser = new DOMParser();
-				const parsedTemplate = parser.parseFromString(this.component.template(this.component), 'text/html');
+        // Add template to root
+        const parser = new DOMParser();
+        const parsedTemplate = parser.parseFromString(this.component.template(this.component), 'text/html');
 
-				// Bind events
-				const bindEvent = (attribute, element) => {
-					if (attribute.name.indexOf('@') === 0 && this.component.methods[attribute.value]) {
-						// console.log(element, attribute.name);
-						element.addEventListener(
-							attribute.name.substring(1),
-							this.component.methods[attribute.value].bind(null, this.component, element)
-						);
-						// Remove useless event attribute to prevent DOM pollution
-						return attribute.name;
-					}
-					return null;
-				};
+        // Bind events
+        const bindEvent = (attribute, element) => {
+          if (attribute.name.indexOf('@') === 0 && this.component.methods[attribute.value]) {
+            // console.log(element, attribute.name);
+            element.addEventListener(
+              attribute.name.substring(1),
+              this.component.methods[attribute.value].bind(null, this.component, element)
+            );
+            // Remove useless event attribute to prevent DOM pollution
+            return attribute.name;
+          }
+          return null;
+        };
 
-				// Init root element 
-				if (parsedTemplate.body.children[0].tagName === 'ROOT') {
-					for (const attribute of parsedTemplate.body.children[0].attributes) {
-						if (attribute.name.indexOf('@') === 0 )
-							bindEvent(attribute, this);
-						else {
-							this.setAttribute(attribute.name, attribute.value);
-						}
-					}
-					// Add style + "root" tag content to this.component root
-					this.root.innerHTML = (style ? style.outerHTML : '') + parsedTemplate.body.children[0].innerHTML;
-				}
-				else {
-					this.root.innerHTML = (style ? style.outerHTML : '') + parsedTemplate.body.innerHTML;
-				}
+        // Init root element 
+        if (parsedTemplate.body.children[0].tagName === 'ROOT') {
+          for (const attribute of parsedTemplate.body.children[0].attributes) {
+            if (attribute.name.indexOf('@') === 0 )
+              bindEvent(attribute, this);
+            else {
+              this.setAttribute(attribute.name, attribute.value);
+            }
+          }
+          // Add style + "root" tag content to this.component root
+          this.root.innerHTML = (style ? style.outerHTML : '') + parsedTemplate.body.children[0].innerHTML;
+        }
+        else {
+          this.root.innerHTML = (style ? style.outerHTML : '') + parsedTemplate.body.innerHTML;
+        }
 
-				Array.prototype.map.call(this.root.querySelectorAll('*:not(style)'), element => {
-					if (element.attributes) {
-						for (const attribute of element.attributes) {
-							bindEvent(attribute, element);
-						}
-					}
-				});
+        Array.prototype.map.call(this.root.querySelectorAll('*:not(style)'), element => {
+          if (element.attributes) {
+            for (const attribute of element.attributes) {
+              bindEvent(attribute, element);
+            }
+          }
+        });
 
-				// Link this.component object and custom element
-				this.component.customElement = this;
-				this.component.root = this.root;
-			}
+        // Link this.component object and custom element
+        this.component.customElement = this;
+        this.component.root = this.root;
+      }
 
-			connectedCallback() {
-				if (this.component.connected) this.component.connected(this.component);
-			}
+      connectedCallback() {
+        if (this.component.connected) this.component.connected(this.component);
+      }
 
-			disconnectedCallback() {
-				if (this.component.disconnected) this.component.disconnected(this.component);
-			}
+      disconnectedCallback() {
+        if (this.component.disconnected) this.component.disconnected(this.component);
+      }
 
-			attributeChangedCallback(prop, old, current) {
-				if (old !== current) {
-					this.component.props[prop.substring(1)] = {
-						force: true,
-						value: current,
-					};
-				}
-			}
-		}, options);
-		return `<${component.selector}></${component.selector}>`;
-	}
-	throw new Error('There is more than one this.component using the ' + this.component.selector + ' selector.');
+      attributeChangedCallback(prop, old, current) {
+        if (old !== current) {
+          this.component.props[prop.substring(1)] = {
+            force: true,
+            value: current,
+          };
+        }
+      }
+    }, options);
+    return `<${component.selector}></${component.selector}>`;
+  }
+  throw new Error('There is more than one this.component using the ' + this.component.selector + ' selector.');
 };
 
 export default define;
