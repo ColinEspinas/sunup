@@ -56,7 +56,7 @@ const define = (component, options = {}) => {
 			constructor() {
 				super();
 				this.constructor.instancesCount = (this.constructor.instancesCount || 0) + 1;
-				console.log(this.constructor.instancesCount);
+
 				this.component = objectDeepCopy(component);
 
 				// Add this.component key
@@ -85,8 +85,7 @@ const define = (component, options = {}) => {
 				let style = null;
 				if (this.component.style) {
 					const stylesheet = new CSSStyleSheet();
-					if (stylesheet.replaceSync && this.root.adoptedStyleSheets) { 
-						console.log("test");
+					if (stylesheet.replaceSync && this.root.adoptedStyleSheets) {
 						stylesheet.replaceSync(this.component.style(this.component));
 						this.root.adoptedStyleSheets = [stylesheet];
 					}
