@@ -5,4 +5,5 @@ import useState from "./state.js";
 import useProps from "./props.js";
 import { emit } from "./events.js";
 import { JSONToCSS } from "./utils.js";
-export { createApp, define, useState, useProps, emit, JSONToCSS };
+import { objectDeepCopy } from "./utils.js";
+export { createApp, define, useState, useProps, emit, JSONToCSS, objectDeepCopy };
