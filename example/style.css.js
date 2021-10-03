@@ -5,5 +5,6 @@ export default ({props}) => /*css*/`
     border-radius: 5px;
     padding: 10px;
     cursor: pointer;
+    font-family: 'Inter', sans-serif;
   }
 `;

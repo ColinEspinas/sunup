@@ -4,19 +4,26 @@ import IncrementButton from "./IncrementButton.js";
 export default define({
   selector: "sunup-app",
   template: ({ state }) => /*html*/ `
-    <root class="test">
-      <h1 id="title" @click="setTitle">${state.title}</h1>
-      <button is="increment-button" id="button-1" :color="blue"></button>
-      <button is="increment-button" id="button-2" :test='["hello", "hey"]'></button>
-    </root>
+    <h1 id="title" @click="setTitle">${state.title}</h1>
+    <button is="increment-button"></button>
   `,
   style: () => /*css*/ `
+    :host {
+      display: flex;
+      width: 100%;
+      height: 100vh;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+    }
+
     h1 {
       color: red;
     }
   `,
   state: {
-    title: "Hello, World!",
+    title: "Hello, Sunup!",
     name: "You",
   },
   methods: {

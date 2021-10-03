@@ -9,8 +9,6 @@ export default define({
     <root class="button" @click="increment">
       <span 
         class="counter"
-        style="color: ${self.props.color}"
-        @color="changeColor"
       >
         Counting: ${self.props.count}
       </span>
@@ -26,7 +24,6 @@ export default define({
   },
   methods: {
     increment({ state }, target) { target.querySelector('.counter').textContent = `Counting: ${++state.count}`; },
-    changeColor({ props }, target) { target.style.color = props.color; },
   },
   watch: {
     state: {

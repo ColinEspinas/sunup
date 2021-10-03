@@ -39,6 +39,7 @@ import { useState, useProps, objectDeepCopy } from './sunup.js';
    * Defines a web this.component using customElement.define, converting a this.component object to a custom element.
    * @param {Component} component
    * @param {DefineOptions} [options]
+   * @returns {(props: Object.<string, *>, innerHTML: string) => string} A function generating a DOM string of the component
  */
 const define = (component, options = {}) => {
   if (!customElements.get(component.selector)) {
@@ -159,7 +160,11 @@ const define = (component, options = {}) => {
         }
       }
     }, options);
-    return `<${component.selector}></${component.selector}>`;
+    return (props, innerHTML) => `
+      <${component.selector} ${props ? Object.keys(props).map(key => `:${key}="${props[key]}"`) : ''}>
+        ${innerHTML | ''}
+      </${component.selector}>
+    `;
   }
   throw new Error('There is more than one this.component using the ' + this.component.selector + ' selector.');
 };
