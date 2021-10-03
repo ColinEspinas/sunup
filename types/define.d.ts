@@ -112,5 +112,8 @@ export type DefineOptions = {
    * Defines a web this.component using customElement.define, converting a this.component object to a custom element.
    * @param {Component} component
    * @param {DefineOptions} [options]
+   * @returns {(props: Object.<string, *>, innerHTML: string) => string} A function generating a DOM string of the component
  */
-declare function define(component: Component, options?: DefineOptions): string;
+declare function define(component: Component, options?: DefineOptions): (props: {
+    [x: string]: any;
+}, innerHTML: string) => string;
