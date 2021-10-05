@@ -1,0 +1,13 @@
+:root {
+  /* Theme colors */
+  --white-color: #fdffff;
+
+  /* Font */
+  --font: 'Jost', sans-serif;
+  --regular-font-size: 1.2rem;
+
+  /* Background gradient */
+  --background-gradient-top-color: rgba(231,185,64,1);
+  --background-gradient-bottom-color: rgba(236,116,1,1);
+  --background-gradient: linear-gradient(0deg, var(--background-gradient-bottom-color) 0%, var(--background-gradient-top-color) 100%);
+}

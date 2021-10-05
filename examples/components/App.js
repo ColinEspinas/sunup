@@ -1,4 +1,4 @@
-import { define, emit } from "../../src/sunup.js";
+import { define, emit } from "../../../src/sunup.js";
 import IncrementButton from "./IncrementButton.js";
 
 export default define({

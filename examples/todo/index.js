@@ -1,4 +1,4 @@
-import sunup from "../src/sunup.js";
+import sunup from "../../src/sunup.js";
 import App from "./components/App.js";
 
 let app = sunup({
